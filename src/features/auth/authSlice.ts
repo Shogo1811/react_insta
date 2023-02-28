@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 import axios from "axios";
 import { PROPS_AUTHEN, PROPS_PROFILE, PROPS_NICKNAME } from "../types";
 
@@ -25,6 +25,8 @@ export const fetchAsyncRegister = createAsyncThunk(
         "Content-Type": "application/json",
       },
     });
+
+    console.log(res.data);
     return res.data;
   }
 );
@@ -55,7 +57,7 @@ export const fetchAsyncGetMyProf = createAsyncThunk("profile/get", async () => {
       Authorization: `JWT ${localStorage.localJWT}`,
     },
   });
-  return res.data[0];
+  return res.data;
 });
 
 export const fetchAsyncCreateProf = createAsyncThunk(
@@ -79,7 +81,6 @@ export const fetchAsyncGetProfs = createAsyncThunk("profiles/get", async () => {
   });
   return res.data;
 });
-
 
 export const authSlice = createSlice({
   name: "auth",
@@ -134,7 +135,7 @@ export const authSlice = createSlice({
       state.myprofile.nickName = action.payload;
     },
   },
-extraReducers: (builder) => {
+  extraReducers: (builder) => {
     builder.addCase(fetchAsyncLogin.fulfilled, (state, action) => {
       localStorage.setItem("localJWT", action.payload.access);
     });
@@ -165,7 +166,7 @@ export const {
   resetOpenSignUp,
   setOpenProfile,
   resetOpenProfile,
-  editNickname
+  editNickname,
 } = authSlice.actions;
 
 export const selectIsLoadingAuth = (state: RootState) =>
