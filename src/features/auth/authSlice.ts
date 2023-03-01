@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import axios from "axios";
 import { PROPS_AUTHEN, PROPS_PROFILE, PROPS_NICKNAME } from "../types";
@@ -25,8 +25,19 @@ export const fetchAsyncRegister = createAsyncThunk(
         "Content-Type": "application/json",
       },
     });
+    return res.data;
+  }
+);
 
-    console.log(res.data);
+export const fetchAsyncCreateProf = createAsyncThunk(
+  "profile/post",
+  async (nickName: PROPS_NICKNAME) => {
+    const res = await axios.post(`${apiUrl}api/profile/`, nickName, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `JWT ${localStorage.localJWT}`,
+      },
+    });
     return res.data;
   }
 );
@@ -57,21 +68,8 @@ export const fetchAsyncGetMyProf = createAsyncThunk("profile/get", async () => {
       Authorization: `JWT ${localStorage.localJWT}`,
     },
   });
-  return res.data;
+  return res.data[0];
 });
-
-export const fetchAsyncCreateProf = createAsyncThunk(
-  "profile/post",
-  async (nickName: PROPS_NICKNAME) => {
-    const res = await axios.post(`${apiUrl}api/profile/`, nickName, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `JWT ${localStorage.localJWT}`,
-      },
-    });
-    return res.data;
-  }
-);
 
 export const fetchAsyncGetProfs = createAsyncThunk("profiles/get", async () => {
   const res = await axios.get(`${apiUrl}api/profile/`, {
@@ -176,4 +174,5 @@ export const selectOpenSignUp = (state: RootState) => state.auth.openSignUp;
 export const selectOpenProfile = (state: RootState) => state.auth.openProfile;
 export const selectProfile = (state: RootState) => state.auth.myprofile;
 export const selectProfiles = (state: RootState) => state.auth.profiles;
+
 export default authSlice.reducer;

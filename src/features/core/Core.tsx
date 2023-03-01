@@ -70,6 +70,10 @@ const Core: React.FC = () => {
   const posts = useSelector(selectPosts);
   const isLoadingPost = useSelector(selectIsLoadingPost);
   const isLoadingAuth = useSelector(selectIsLoadingAuth);
+  const test = "test";
+
+  // console.log(profile.nickName);
+  // console.log(profile.id)
 
   useEffect(() => {
     const fetchBootLoader = async () => {
@@ -91,6 +95,38 @@ const Core: React.FC = () => {
   return (
     <div>
       <Auth />
+      <div className={styles.core_header}>
+        <h1 className={styles.core_title}>SNS clone</h1>
+        {profile.nickName ? (
+          <>
+            <button
+              className={styles.core_btnModal}
+              onClick={() => {
+                dispatch(setOpenNewPost());
+                dispatch(resetOpenProfile());
+              }}
+            >
+              <MdAddAPhoto />
+            </button>
+            <div className={styles.core_logout}>
+              {(isLoadingPost || isLoadingAuth) && <CircularProgress />}
+              <Button
+                onClick={() => {
+                  localStorage.removeItem("localJWT");
+                  dispatch(editNickname(""));
+                  dispatch(resetOpenProfile());
+                  dispatch(resetOpenNewPost());
+                  dispatch(setOpenSignIn());
+                }}
+              >
+                Logout
+              </Button>
+            </div>
+          </>
+        ) : (
+          <div></div>
+        )}
+      </div>
     </div>
   );
 };
